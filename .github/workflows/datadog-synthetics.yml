@@ -14,10 +14,7 @@
 name: Run Datadog Synthetic tests
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch: # Optional inherited integration; run manually after configuring Datadog.
 
 jobs:
   build:
