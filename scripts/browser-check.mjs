@@ -15,6 +15,24 @@ try {
     assert.match(await page.locator('h1').innerText(), /Growth Systems Specialist/);
     assert.equal(await page.locator('.case-study').count(), 4);
     assert.equal(await page.locator('.portfolio-item').count(),15);
+    assert.equal(await page.locator('#wingman-results').count(),1);
+    assert.equal(await page.locator('#nextwave-results').count(),1);
+    assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(9, 9, 11)');
+    assert(!(await page.locator('h1 span').evaluate(el=>getComputedStyle(el).fontFamily)).includes('Georgia'));
+    await page.locator('[data-wing-metric="interactions"]').click();
+    assert.equal(await page.locator('[data-wing-total]').innerText(),'4,517');
+    assert.equal(await page.locator('[data-wing-value="1"]').innerText(),'1,107');
+    assert.match(await page.locator('[data-wing-chart]').getAttribute('aria-label'),/interactions/);
+    await page.locator('[data-wing-metric="views"]').click();
+    assert.equal(await page.locator('[data-wing-total]').innerText(),'196,419');
+    await page.locator('[data-next-metric="spend"]').click();
+    assert.equal(await page.locator('[data-next-highlight]').innerText(),'$120.63');
+    assert.equal(await page.locator('[data-next-value="0"]').innerText(),'$231.09');
+    await page.locator('[data-next-metric="cost"]').click();
+    assert.equal(await page.locator('[data-next-highlight]').innerText(),'$0.256');
+    assert.match(await page.locator('[data-next-note]').innerText(),/not a conversion-lift claim/);
+    await page.locator('[data-next-metric="conversations"]').click();
+    assert.equal(await page.locator('[data-next-highlight]').innerText(),'472');
     await page.locator('[data-chart-mode="share"]').click();
     assert.equal(await page.locator('[data-chart-value="new"]').innerText(),'44.9%');
     assert.equal(await page.locator('[data-chart-value="returning"]').innerText(),'55.1%');
@@ -63,5 +81,5 @@ try {
   await page.goto(base);
   assert(await page.locator('h1').isVisible());
   assert(await page.locator('#featured').isVisible());
-  console.log('PASS: 15 artworks, chart modes, captioned modal navigation, 360/768/1440 widths, media, anchors, menu, filters, lightbox keyboard, CV, no-JS content.');
+  console.log('PASS: black theme, sans-serif type, Wingman/Next Wave chart metrics, 15 artworks, chart modes, captioned modal navigation, 360/768/1440 widths, media, anchors, menu, filters, lightbox keyboard, CV, no-JS content.');
 } finally { await browser.close(); }
