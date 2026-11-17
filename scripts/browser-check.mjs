@@ -14,6 +14,12 @@ try {
     await page.getByRole('heading', {level:1}).waitFor();
     assert.match(await page.locator('h1').innerText(), /Growth Systems Specialist/);
     assert.equal(await page.locator('.case-study').count(), 4);
+    assert.equal(await page.locator('.portfolio-item').count(),15);
+    await page.locator('[data-chart-mode="share"]').click();
+    assert.equal(await page.locator('[data-chart-value="new"]').innerText(),'44.9%');
+    assert.equal(await page.locator('[data-chart-value="returning"]').innerText(),'55.1%');
+    await page.locator('[data-chart-mode="count"]').click();
+    assert.equal(await page.locator('[data-chart-value="new"]').innerText(),'162');
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Horizontal overflow at '+width);
     for (const img of await page.locator('img[src]').all()) {
       await img.scrollIntoViewIfNeeded();
@@ -30,13 +36,20 @@ try {
       assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
     }
     await page.locator('[data-filter="hospitality"]').click();
-    assert.equal(await page.locator('.portfolio-item:visible').count(),2);
+    assert.equal(await page.locator('.portfolio-item:visible').count(),4);
+    assert.equal(await page.locator('.gallery-count').innerText(),'4 pieces');
     await page.locator('[data-filter="all"]').click();
     const art = page.locator('.portfolio-item').first();
     await art.click();
     assert.equal(await page.locator('.lightbox').getAttribute('aria-hidden'),'false');
     await page.keyboard.press('Tab');
-    assert(await page.locator('.lightbox-close').evaluate(el=>el===document.activeElement));
+    assert(await page.locator('.lightbox').evaluate(el=>el.contains(document.activeElement)));
+    const initialImage = await page.locator('.lightbox img').getAttribute('src');
+    await page.keyboard.press('ArrowRight');
+    assert.notEqual(await page.locator('.lightbox img').getAttribute('src'), initialImage);
+    assert((await page.locator('#lightbox-caption').innerText()).length > 20);
+    await page.keyboard.press('ArrowLeft');
+    assert.equal(await page.locator('.lightbox img').getAttribute('src'), initialImage);
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('.lightbox').getAttribute('aria-hidden'),'true');
     assert(await art.evaluate(el=>el===document.activeElement));
@@ -50,5 +63,5 @@ try {
   await page.goto(base);
   assert(await page.locator('h1').isVisible());
   assert(await page.locator('#featured').isVisible());
-  console.log('PASS: 360/768/1440 widths, media, anchors, menu, filters, lightbox keyboard, CV, no-JS content.');
+  console.log('PASS: 15 artworks, chart modes, captioned modal navigation, 360/768/1440 widths, media, anchors, menu, filters, lightbox keyboard, CV, no-JS content.');
 } finally { await browser.close(); }
