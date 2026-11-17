@@ -1,0 +1,54 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import { mkdirSync } from 'node:fs';
+const base = process.env.TEST_URL || 'http://127.0.0.1:8000/KC-portfolio/';
+const browser = await chromium.launch();
+mkdirSync('test-results', {recursive: true});
+try {
+  for (const width of [360, 768, 1440]) {
+    const page = await browser.newPage({viewport:{width,height:900}, reducedMotion:'reduce'});
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    const response = await page.goto(base);
+    assert.equal(response.status(), 200);
+    await page.getByRole('heading', {level:1}).waitFor();
+    assert.match(await page.locator('h1').innerText(), /Growth Systems Specialist/);
+    assert.equal(await page.locator('.case-study').count(), 4);
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Horizontal overflow at '+width);
+    for (const img of await page.locator('img[src]').all()) {
+      await img.scrollIntoViewIfNeeded();
+      await img.evaluate(el => el.decode());
+    }
+    for (const link of await page.locator('a[href^="#"]').all()) {
+      const id = (await link.getAttribute('href')).slice(1);
+      assert.equal(await page.locator('[id="'+id+'"]').count(),1);
+    }
+    if(width <= 980) {
+      await page.locator('.menu-toggle').click();
+      assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');
+      await page.locator('.nav-links a').first().click();
+      assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
+    }
+    await page.locator('[data-filter="hospitality"]').click();
+    assert.equal(await page.locator('.portfolio-item:visible').count(),2);
+    await page.locator('[data-filter="all"]').click();
+    const art = page.locator('.portfolio-item').first();
+    await art.click();
+    assert.equal(await page.locator('.lightbox').getAttribute('aria-hidden'),'false');
+    await page.keyboard.press('Tab');
+    assert(await page.locator('.lightbox-close').evaluate(el=>el===document.activeElement));
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('.lightbox').getAttribute('aria-hidden'),'true');
+    assert(await art.evaluate(el=>el===document.activeElement));
+    const cv=await page.request.get(new URL('Karl_Cometa_CV.pdf',base).href);
+    assert.equal(cv.status(),200); assert((await cv.body()).subarray(0,5).equals(Buffer.from('%PDF-')));
+    assert.equal(errors.length,0,errors.join('\n'));
+    await page.goto(base); await page.screenshot({path:'test-results/'+width+'.png',fullPage:true});
+    await page.close();
+  }
+  const page=await browser.newPage({javaScriptEnabled:false});
+  await page.goto(base);
+  assert(await page.locator('h1').isVisible());
+  assert(await page.locator('#featured').isVisible());
+  console.log('PASS: 360/768/1440 widths, media, anchors, menu, filters, lightbox keyboard, CV, no-JS content.');
+} finally { await browser.close(); }

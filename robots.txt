@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://karlcometawork-bit.github.io/KC-portfolio/sitemap.xml
