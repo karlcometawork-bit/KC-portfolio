@@ -15,6 +15,8 @@ try {
     assert.match(await page.locator('h1').innerText(), /Growth Systems Specialist/);
     assert.equal(await page.locator('.case-study').count(), 4);
     assert.equal(await page.locator('.portfolio-item').count(),15);
+    assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(9, 9, 11)');
+    assert(!(await page.locator('h1 span').evaluate(el=>getComputedStyle(el).fontFamily)).includes('Georgia'));
     await page.locator('[data-chart-mode="share"]').click();
     assert.equal(await page.locator('[data-chart-value="new"]').innerText(),'44.9%');
     assert.equal(await page.locator('[data-chart-value="returning"]').innerText(),'55.1%');
