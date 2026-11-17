@@ -84,30 +84,3 @@ document.addEventListener('keydown',e=>{
     else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
   }
 });
-
-const wingMetrics={views:{values:[116500,38844,41075],total:'196,419',unit:'recorded views across these 3 office accounts',label:'views'},interactions:{values:[2300,1107,1110],total:'4,517',unit:'recorded interactions across these 3 office accounts',label:'interactions'}};
-document.querySelectorAll('[data-wing-metric]').forEach(button=>button.addEventListener('click',()=>{
- const data=wingMetrics[button.dataset.wingMetric],max=Math.max(...data.values);
- document.querySelectorAll('[data-wing-metric]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
- document.querySelector('[data-wing-total]').textContent=data.total;
- document.querySelector('[data-wing-unit]').textContent=data.unit;
- data.values.forEach((value,i)=>{document.querySelector('[data-wing-value="'+i+'"]').textContent=value.toLocaleString('en-US');document.querySelector('[data-wing-bar="'+i+'"]').style.width=(value/max*100)+'%';});
- document.querySelector('[data-wing-max]').textContent=max.toLocaleString('en-US')+' '+data.label;
- document.querySelector('[data-wing-chart]').setAttribute('aria-label','Instagram baseline '+data.label+': Wetherill Park '+data.values[0]+', Fairfield '+data.values[1]+', Cecil Hills '+data.values[2]+'. Same Aug 23–Sep 21, 2026 window.');
-}));
-const nextMetrics={
- conversations:{values:[840,472],max:1000,format:v=>v.toLocaleString('en-US'),unit:'recorded conversations · Nov 8–14',note:'Conversation volume fell 43.8% during a shorter delivery window.',label:'recorded conversations'},
- spend:{values:[231.09,120.63],max:250,format:v=>'$'+v.toFixed(2),unit:'recorded spend USD · Nov 8–14',note:'Reported spend fell 47.8%; ads were held from Nov 12.',label:'spend USD'},
- cost:{values:[.275,.256],max:.30,format:v=>'$'+v.toFixed(3),unit:'reported cost per conversation · Nov 8–14',note:'Reported cost/conversation fell 7.1%; this is not a conversion-lift claim.',label:'cost per conversation USD'}
-};
-document.querySelectorAll('[data-next-metric]').forEach(button=>button.addEventListener('click',()=>{
- const data=nextMetrics[button.dataset.nextMetric];
- document.querySelectorAll('[data-next-metric]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
- document.querySelector('[data-next-highlight]').textContent=data.format(data.values[1]);
- document.querySelector('[data-next-unit]').textContent=data.unit;
- document.querySelector('[data-next-axis-top]').textContent=data.format(data.max);
- document.querySelector('[data-next-axis-mid]').textContent=data.format(data.max/2);
- data.values.forEach((value,i)=>{document.querySelector('[data-next-value="'+i+'"]').textContent=data.format(value);document.querySelector('[data-next-bar="'+i+'"]').style.height=(value/data.max*100)+'%';});
- document.querySelector('[data-next-note]').textContent=data.note;
- document.querySelector('[data-next-chart]').setAttribute('aria-label',data.label+': Nov 1–7 '+data.format(data.values[0])+', Nov 8–14 '+data.format(data.values[1])+'. Ads held from Nov 12.');
-}));
