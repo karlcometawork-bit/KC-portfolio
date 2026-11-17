@@ -16,3 +16,12 @@
 | Portrait | karl-formal.webp visually reviewed | Reused; AI-stylized hero replaced. |
 | CV | Existing PDF present, duplicate filenames share same blob | Retained canonical download. Binary signature/link tested by pipeline; detailed CV claims not yet reviewed. |
 | Systems | Role-based process summaries | Labeled supported experience, diagrams illustrative; no autonomous agent deployment claimed. |
+
+## Visual refresh
+- Added eight visually reviewed existing assets: aop-3, aop-4, elpatio-3, elpatio-5, enchanted-1, enchanted-4, gym-2 and gym-3.
+- Gallery contains 15 existing promotional/identity assets; captions describe the creative approach, not measured performance. Gym identity authorship is not asserted beyond its presence in the supplied creative portfolio.
+- Did not include customer-focused enchanted-2/-5/-6 or gym-4 group photo in this release.
+- AOP chart uses the user-supplied CSR summary: 162 new + 199 returning = 361 engagements. Derived shares are 44.9% and 55.1%, rounded to one decimal. Qualified leads (30) are displayed separately; no lead-to-sale rate is inferred.
+- Chart is a faithful visualization of reported figures, not a new screenshot of client software. Data table and source/period are available inline.
+- Next Wave period simplified to 2026 project work pending exact end-date confirmation.
+- PROHUB aggregate totals remain unverified and are not charted. Next Wave and Wingman still need client-approved public artifacts.
