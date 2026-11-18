@@ -15,6 +15,9 @@ try {
     assert.match(await page.locator('h1').innerText(), /Growth Systems Specialist/);
     assert.equal(await page.locator('.case-study').count(), 4);
     assert.equal(await page.locator('.portfolio-item').count(),15);
+    assert.equal(await page.locator('.highlight-tile').count(),3);
+    assert.equal(await page.locator('.highlight-tile strong').first().innerText(),'196.4K');
+    assert.match(await page.locator('.highlights-note').innerText(),/team\/account activity/);
     assert.equal(await page.locator('#wingman-results').count(),1);
     assert.equal(await page.locator('#nextwave-results').count(),1);
     assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(9, 9, 11)');
