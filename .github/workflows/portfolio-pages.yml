@@ -13,6 +13,9 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PLAYWRIGHT_CHANNEL: chrome
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +26,6 @@ jobs:
           python-version: '3.12'
       - run: python scripts/build.py
       - run: npm install --ignore-scripts --no-audit --no-fund
-      - run: npx playwright install --with-deps chromium
       - name: Test under GitHub Pages subpath
         run: |
           mkdir -p /tmp/portfolio-preview/KC-portfolio
