@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { mkdirSync } from 'node:fs';
 const base = process.env.TEST_URL || 'http://127.0.0.1:8000/KC-portfolio/';
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.PLAYWRIGHT_CHANNEL ? {channel: process.env.PLAYWRIGHT_CHANNEL} : {});
 mkdirSync('test-results', {recursive: true});
 try {
   for (const width of [360, 768, 1440]) {
